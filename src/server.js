@@ -8,7 +8,7 @@ const server = net.createServer(onConnection);
 initServer()
   .then(() => {
     server.listen(config.server.port, config.server.host, () => {
-      console.log(`Server listening on port ${config.server.port}:${config.server.host}`);
+      console.log(`Server listening on port ${config.server.host}:${config.server.port}`);
       console.log(server.address());
     });
   })

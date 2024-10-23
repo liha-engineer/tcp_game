@@ -1,3 +1,5 @@
+import { config } from "../../config/config.js";
+import { PACKET_TYPE } from "../../constants/header.js";
 import { getProtoMessages } from "../../init/loadProtos.js"
 import { getNextSequence } from "../../session/user.session.js";
 
@@ -13,7 +15,7 @@ export const createResponse = (handlerId, responseCode, data = null, userId) => 
         sequence : userId ? getNextSequence(userId) : 0
     }
 
-    const buffer = Buffer.encode(responsePayload).finish();
+    const buffer = Response.encode(responsePayload).finish();
 
     const packetLength = Buffer.alloc(config.packet.totalLength);
     packetLength.writeUInt32BE(buffer.length + config.packet.totalLength+ config.packet.typeLength, 0)

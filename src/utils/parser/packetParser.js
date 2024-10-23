@@ -1,3 +1,4 @@
+import { config } from '../../config/config.js';
 import { getPrototypeNameByHandlerId } from '../../handlers/index.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import CustomError from '../error/custom.error.js'

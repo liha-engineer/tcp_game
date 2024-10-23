@@ -1,10 +1,10 @@
 import { config } from '../config/config.js';
 import { PACKET_TYPE } from '../constants/header.js';
-import { getHandlerById } from '../handlers/index.js';
 import { getUserById } from '../../src/session/user.session.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { handleError } from '../utils/error/errorHandler.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
+import { getHandlerById } from '../handlers/index.js';
 
 // 데이터 스트림이라는 개념을 알아야 함 - 청크라는 단위로 파일을 주고 받음
 export const onData = (socket) => async (data) => {
@@ -37,11 +37,6 @@ export const onData = (socket) => async (data) => {
   
             const handler = getHandlerById(handlerId);
             await handler({socket, userId, payload})
-  
-            console.log(`handlerId : ${handlerId}`);
-            console.log(`userId : ${userId}`);
-            console.log(`payload : ${payload}`);
-            console.log(`sequence : ${sequence}`);
         }
       } catch (e) {
         handleError(socket, e);

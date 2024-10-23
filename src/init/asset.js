@@ -4,10 +4,6 @@ import { fileURLToPath } from 'url';
 
 let gameAssets = {};
 
-// ES6 이전 문법의 사용형태
-// __dirname
-// __filename
-
 // 현재 파일의 절대경로
 const __filename = fileURLToPath(import.meta.url);
 // 파일이름 빼고 디렉토리 경로만 찾기
