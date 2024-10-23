@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import prodobuf from 'protobufjs';
+import { packetNames } from '../protobuf/packetNames.js';
 
 // 현재 파일의 절대경로
 const __filename = fileURLToPath(import.meta.url);
@@ -34,11 +35,24 @@ const protoMessages = {};
 export const loadProtos = async () => {
   try {
     // root 인스턴스 생성
-    const root = prodobuf.Root();
+    const root = new prodobuf.Root();
     await Promise.all(protoFiles.map((file) => root.load(file)));
+
+    // entries를 통해 키와 값을 모두 가져옴
+    for (const [packageName, types] of Object.entries(packetNames)) {
+      protoMessages[packageName] = {};
+      for (const [type, typeName] of Object.entries(types)) {
+        protoMessages[packageName][type] = root.lookupType(typeName);
+      }
+    }
+    console.log('protoMessages?:', protoMessages);
 
     console.log('Protobuf 파일 로드 완료');
   } catch (e) {
     console.error(`Protobuf 파일 로드 중 오류 발생`, e);
   }
+};
+
+export const getProtoMessages = () => {
+  return { ...protoMessages };
 };
