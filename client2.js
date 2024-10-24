@@ -6,7 +6,8 @@ const PACKET_TYPE_LENGTH = 1; // 패킷타입을 나타내는 1바이트
 
 let userId;
 let sequence;
-const deviceId = 'xxxx1x';
+const deviceId = 'xxxxx';
+let gameId = 'd9149469-fbe5-4a73-bb41-325c63d79ddf';
 
 const createPacket = (handlerId, payload, clientVersion = '1.0.0', type, name) => {
   const protoMessages = getProtoMessages();
@@ -28,7 +29,7 @@ const createPacket = (handlerId, payload, clientVersion = '1.0.0', type, name) =
   };
 };
 
-const sendPacket = async (socket, packet) => {
+const sendPacket = (socket, packet) => {
   const protoMessages = getProtoMessages();
   const Packet = protoMessages.common.Packet;
   if (!Packet) {
@@ -70,11 +71,11 @@ client.connect(PORT, HOST, async () => {
   await delay(500);
 
   const createGamePacket = createPacket(
-    1,
-    { timestamp: Date.now() },
+    2,
+    { timestamp: Date.now(), gameId },
     '1.0.0',
     'game',
-    'CreateGamePayload',
+    'JoinGamePayload',
   );
 
   await sendPacket(client, createGamePacket);
@@ -87,7 +88,7 @@ client.on('data', (data) => {
 
   // 2. 패킷 타입 정보 수신 (1바이트)
   const packetType = data.readUInt8(4);
-  const packet = data.subarray(totalHeaderLength, totalHeaderLength + length); // 패킷 데이터
+  const packet = data.slice(totalHeaderLength, totalHeaderLength + length); // 패킷 데이터
 
   if (packetType === 1) {
     const protoMessages = getProtoMessages();

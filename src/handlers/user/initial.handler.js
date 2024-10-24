@@ -1,11 +1,13 @@
 import { HANDLER_IDS, RESPONSE_SUCCESS_CODE } from '../../constants/handlerIds.js';
-import { findUserByDeviceId, updateUserLogin } from '../../db/user/user.db.js';
+import { createUser, findUserByDeviceId, updateUserLogin } from '../../db/user/user.db.js';
+import { addUser } from '../../session/user.session.js';
 import { handleError } from '../../utils/error/errorHandler.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const initialHandler = async ({ socket, userId, payload }) => {
   try {
     const { deviceId } = payload;
+    console.log('deviceId', deviceId)
 
     let user = await findUserByDeviceId(deviceId);
     if (!user) {
@@ -14,7 +16,7 @@ const initialHandler = async ({ socket, userId, payload }) => {
       await updateUserLogin(user.id)
     }
 
-    addUser(socket, deviceId);
+    addUser(socket, user.id);
   
     const initialResponse = createResponse(
       HANDLER_IDS.INITIAL,

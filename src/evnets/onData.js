@@ -12,9 +12,10 @@ export const onData = (socket) => async (data) => {
 
   const totalHeaderLength = config.packet.totalLength + config.packet.typeLength;
 
+  // 버퍼에 최소한 전체 헤더가 있을 때만 패킷 처리
   while (socket.buffer.length >= totalHeaderLength) {
     const length = socket.buffer.readUInt32BE(0);
-    const packetType = socket.buffer.readUInt8(TOTAL_LENGTH);
+    const packetType = socket.buffer.readUInt8(config.packet.totalLength);
 
     if (socket.buffer.length >= length) {
       const packet = socket.buffer.subarray(totalHeaderLength, length);
@@ -29,6 +30,7 @@ export const onData = (socket) => async (data) => {
             break; 
           case PACKET_TYPE.NORMAL:
             const { handlerId, userId, payload, sequence } = packetParser(packet);
+            console.log('handlerId?', handlerId)
             
             const user = getUserById(userId);
             if(user && user.sequence !== sequence) {
