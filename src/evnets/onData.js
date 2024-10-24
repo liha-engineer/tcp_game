@@ -1,5 +1,5 @@
 import { config } from '../config/config.js';
-import { PACKET_TYPE } from '../constants/header.js';
+import { PACKET_TYPE, TOTAL_LENGTH } from '../constants/header.js';
 import { getUserById } from '../../src/session/user.session.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { handleError } from '../utils/error/errorHandler.js';
@@ -14,7 +14,7 @@ export const onData = (socket) => async (data) => {
 
   while (socket.buffer.length >= totalHeaderLength) {
     const length = socket.buffer.readUInt32BE(0);
-    const packetType = socket.buffer.readUInt8(config.packet.totalLength);
+    const packetType = socket.buffer.readUInt8(TOTAL_LENGTH);
 
     if (socket.buffer.length >= length) {
       const packet = socket.buffer.subarray(totalHeaderLength, length);
@@ -36,7 +36,7 @@ export const onData = (socket) => async (data) => {
             }
   
             const handler = getHandlerById(handlerId);
-            await handler({socket, userId, payload})
+            await handler({socket, userId, payload});
         }
       } catch (e) {
         handleError(socket, e);
