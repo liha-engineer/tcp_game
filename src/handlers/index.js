@@ -4,6 +4,7 @@ import CustomError from '../utils/error/customError.js';
 import { ErrorCodes } from '../utils/error/errorCodes.js';
 import createGameHandler from './game/createGame.hanlder.js';
 import joinGameHandler from './game/joinGame.handler.js';
+import updateLocationHandler from './game/updateLocation.handler.js';
 
 const handlers = {
   [HANDLER_IDS.INITIAL]: {
@@ -20,6 +21,13 @@ const handlers = {
     handler: joinGameHandler,
     protoType: 'game.JoinGamePayload',
   },
+
+  [HANDLER_IDS.UPDATE_LOCATION]: {
+    handler: updateLocationHandler,
+    protoType: 'game.updateLocationPayload',
+  },
+
+
 };
 
 export const getHandlerById = (handlerId) => {
